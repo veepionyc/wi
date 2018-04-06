@@ -58,13 +58,13 @@ async def install(name, version):
     """Install a wheel package into the system. It will try to use the
     best match for the machine, considering the architecture and OS.
 
-    If the package can't be found, 
+    If the package can't be found,
     """
     package = await metadata(name, version)
     if not package:
         return ('missing', name, version)
     releases = package['releases'][package['info']['version']]
-    with tempfile.TemporaryDirectory() as tmpdir: 
+    with tempfile.TemporaryDirectory() as tmpdir:
         # Sorting a list of wheel.install.WheelFile instances will arrange
         # elements so the first is always the best match for the local env.
         wheels = sorted(
@@ -99,9 +99,11 @@ async def main(requirements):
     for failure in results:
         if failure:
             _, package, version = failure
-            print(f'{package}=={version}')
+            if version:
+                print('{}=={}'.format(package, version))
+            else:
+                print(package)
 
-    log('wiiii')
 
 if __name__ == '__main__':
     log('starting')
